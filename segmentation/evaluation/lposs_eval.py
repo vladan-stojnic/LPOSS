@@ -180,6 +180,7 @@ class LPOSS_Infrencer(EncoderDecoder):
     @torch.no_grad()
     def whole_inference(self, inputs: Tensor,
                         batch_img_metas: List[dict], rescale) -> Tensor:
+        _, _, h_img, w_img = inputs.size()
         img_dino_feats, img_clip_feats, img_clf = self.encode_decode(inputs, batch_img_metas)
         img_dino_feats = img_dino_feats[0, ...]
         img_clip_feats = img_clip_feats[0, ...]
@@ -195,7 +196,7 @@ class LPOSS_Infrencer(EncoderDecoder):
         clip_feats = F.normalize(img_clip_feats, p=2, dim=-1)
         clip_preds = clip_feats @ clf.T
 
-        L = get_lposs_laplacian(dino_feats, locations, height_width, sigma=self.config.sigma, pix_dist_pow=self.config.pix_dist_pow, k=self.config.k, gamma=self.config.gamma, alpha=self.config.alpha, patch_size=self.config.model.vit_patch_size)
+        L = get_lposs_laplacian(dino_feats, torch.zeros((1, 4)).to(dino_feats.device), [(h, w)], sigma=self.config.sigma, pix_dist_pow=self.config.pix_dist_pow, k=self.config.k, gamma=self.config.gamma, alpha=self.config.alpha, patch_size=self.config.model.vit_patch_size)
         
         lp_preds = perform_lp(L, clip_preds)
 
