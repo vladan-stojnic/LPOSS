@@ -1,4 +1,4 @@
-name: lp_clip_dino_env
+name: lposs_mess
 channels:
   - pytorch
   - nvidia
@@ -190,7 +190,6 @@ dependencies:
       - overrides==7.7.0
       - pandas==2.2.2
       - pandocfilters==1.5.1
-      - panopticapi==0.1
       - parso==0.8.4
       - pexpect==4.9.0
       - platformdirs==4.2.2
@@ -265,4 +264,3 @@ dependencies:
       - yacs==0.1.8
       - yapf==0.40.2
       - zipp==3.20.1
-prefix: /home/stojnvla/.conda/envs/lp_clip_dino_env

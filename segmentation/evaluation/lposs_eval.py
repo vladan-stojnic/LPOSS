@@ -29,6 +29,7 @@ def reshape_windows(x):
     height_width = [(y.shape[0], y.shape[1]) for y in x]
     dim = x[0].shape[-1]
     x = [torch.reshape(y, (-1, dim)) for y in x]
+    # x = x.reshape((-1, ))
     
     return torch.cat(x, dim=0), height_width
 
@@ -254,8 +255,9 @@ class LPOSS_Infrencer(EncoderDecoder):
         w_grids = max(w_img - w_crop + w_stride - 1, 0) // w_stride + 1
         clf = None
         locations = inputs.new_zeros((h_grids*w_grids, 4))
-        dino_feats = []
-        clip_feats = []
+        # dino_feats = []
+        # clip_feats = []
+        images = []
 
         # go over sliding windows and extract features
         for h_idx in range(h_grids):
@@ -267,22 +269,27 @@ class LPOSS_Infrencer(EncoderDecoder):
                 y1 = max(y2 - h_crop, 0)
                 x1 = max(x2 - w_crop, 0)
                 crop_img = inputs[:, :, y1:y2, x1:x2]
+                images.append(crop_img)
 
-                batch_img_metas[0]['img_shape'] = crop_img.shape[2:]
+                # batch_img_metas[0]['img_shape'] = crop_img.shape[2:]
 
-                img_dino_feats, img_clip_feats, img_clf = self.encode_decode(crop_img, batch_img_metas)
+                # img_dino_feats, img_clip_feats, img_clf = self.encode_decode(crop_img, batch_img_metas)
 
-                if img_clip_feats.shape[1] != img_dino_feats.shape[1] or img_clip_feats.shape[2] != img_dino_feats.shape[2]:
-                    img_clip_feats = F.interpolate(img_clip_feats, size=(img_dino_feats.shape[1], img_dino_feats.shape[2]), mode='bilinear', align_corners=False)
+                # if img_clip_feats.shape[1] != img_dino_feats.shape[1] or img_clip_feats.shape[2] != img_dino_feats.shape[2]:
+                #     img_clip_feats = F.interpolate(img_clip_feats, size=(img_dino_feats.shape[1], img_dino_feats.shape[2]), mode='bilinear', align_corners=False)
 
-                dino_feats.append(img_dino_feats[0, ...])
-                clip_feats.append(img_clip_feats[0, ...])
+                # dino_feats.append(img_dino_feats[0, ...])
+                # clip_feats.append(img_clip_feats[0, ...])
                 locations[h_idx*w_grids + w_idx, 0] = y1
                 locations[h_idx*w_grids + w_idx, 1] = y2
                 locations[h_idx*w_grids + w_idx, 2] = x1
                 locations[h_idx*w_grids + w_idx, 3] = x2
-                if clf is None:
-                    clf = img_clf
+                # if clf is None:
+                #     clf = img_clf
+
+        images = torch.cat(images, dim=0)
+        dino_feats, clip_feats, clf = self.encode_decode(images, None)
+        # breakpoint()
                 
         num_classes = clf.shape[0]
         

@@ -130,20 +130,20 @@ class LPOSS(nn.Module):
         dino_feats = F.normalize(dino_feats, p=2, dim=-1)
 
         clip_feats = reshape_features(clip_feats)
-        clip_feats = F.normalize(clip_feats, p=2, dim=1)
+        clip_feats = F.normalize(clip_feats, p=2, dim=-1)
 
-        clip_feats = clip_feats.reshape((h_clip, w_clip, -1))
-        dino_feats = dino_feats.reshape((h_dino, w_dino, -1))
+        clip_feats = clip_feats.reshape((clip_feats.shape[0], h_clip, w_clip, -1))
+        dino_feats = dino_feats.reshape((dino_feats.shape[0], h_dino, w_dino, -1))
 
-        clip_feats = torch.unsqueeze(clip_feats, 0)
-        dino_feats = torch.unsqueeze(dino_feats, 0)
+        # clip_feats = torch.unsqueeze(clip_feats, 0)
+        # dino_feats = torch.unsqueeze(dino_feats, 0)
 
         return dino_feats, clip_feats, clf
     
 
 def reshape_features(feats):
-    feats = feats[0, ...]
-    feats = feats.reshape((feats.shape[0], -1))
-    feats = feats.T
+    # feats = feats[0, ...]
+    feats = feats.reshape((feats.shape[0], feats.shape[1], -1))
+    feats = feats.permute(0, 2, 1)
 
     return feats
