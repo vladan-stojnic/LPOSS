@@ -86,7 +86,7 @@ def get_lposs_laplacian(feats, locations, height_width, sigma=0.0, pix_dist_pow=
     return L
 
 
-def dfs_search(L, Y, tol=1e-6, maxiter=50):
+def dfs_search(L, Y, tol=1e-6, maxiter=10):
     out = s_linalg.cg(L, Y, tol=tol, maxiter=maxiter)[0]
 
     return out
@@ -183,6 +183,8 @@ class LPOSS_Infrencer(EncoderDecoder):
                         batch_img_metas: List[dict], rescale) -> Tensor:
         _, _, h_img, w_img = inputs.size()
         img_dino_feats, img_clip_feats, img_clf = self.encode_decode(inputs, batch_img_metas)
+        if img_clip_feats.shape[1] != img_dino_feats.shape[1] or img_clip_feats.shape[2] != img_dino_feats.shape[2]:
+            img_clip_feats = F.interpolate(img_clip_feats.permute(0, 3, 1, 2), size=(img_dino_feats.shape[1], img_dino_feats.shape[2]), mode='bilinear', align_corners=False).permute(0, 2, 3, 1)
         img_dino_feats = img_dino_feats[0, ...]
         img_clip_feats = img_clip_feats[0, ...]
         clf = img_clf
@@ -206,6 +208,7 @@ class LPOSS_Infrencer(EncoderDecoder):
         preds = preds.permute((0, 3, 1, 2))
 
         if self.config.pixel_refine:
+            preds = resize(preds, size=(h_img, w_img), mode='bilinear', align_corners=self.align_corners)
             preds = preds[0, ...]
             preds = preds.permute((1, 2, 0))
             preds = preds.reshape((h_img*w_img, -1))
@@ -289,6 +292,8 @@ class LPOSS_Infrencer(EncoderDecoder):
 
         images = torch.cat(images, dim=0)
         dino_feats, clip_feats, clf = self.encode_decode(images, None)
+        if clip_feats.shape[1] != dino_feats.shape[1] or clip_feats.shape[2] != dino_feats.shape[2]:
+            clip_feats = F.interpolate(clip_feats.permute(0, 3, 1, 2), size=(dino_feats.shape[1], dino_feats.shape[2]), mode='bilinear', align_corners=False).permute(0, 2, 3, 1)
         # breakpoint()
                 
         num_classes = clf.shape[0]
