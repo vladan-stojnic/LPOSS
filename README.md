@@ -53,7 +53,7 @@ torchrun main_eval.py lposs_plus.yaml --dataset {voc, coco_object, context, cont
 ## Citation
 
 ```
-@InProceedings{Stojnic_2025_CVPR,
+@InProceedings{stojnic2025_lposs,
     author    = {Stojni\'c, Vladan and Kalantidis, Yannis and Matas, Ji\v{r}\'i  and Tolias, Giorgos},
     title     = {LPOSS: Label Propagation Over Patches and Pixels for Open-vocabulary Semantic Segmentation},
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
