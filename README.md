@@ -1,6 +1,10 @@
 # LPOSS: Label Propagation Over Patches and Pixels for Open-vocabulary Semantic Segmentation
 
-This repository contains the code for the paper Vladan Stojnić, Yannis Kalantidis, Jiří Matas, Giorgos Tolias, ["LPOSS: Label Propagation Over Patches and Pixels for Open-vocabulary Semantic Segmentation"](https://github.com/vladan-stojnic/LPOSS), In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2025.
+This repository contains the code for the paper Vladan Stojnić, Yannis Kalantidis, Jiří Matas, Giorgos Tolias, ["LPOSS: Label Propagation Over Patches and Pixels for Open-vocabulary Semantic Segmentation"](http://arxiv.org/abs/2503.19777), In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2025.
+
+## Demo
+
+The demo of our method is available at [<img src="https://huggingface.co/datasets/huggingface/brand-assets/resolve/main/hf-logo.png" height=20px> huggingface spaces](https://huggingface.co/spaces/stojnvla/LPOSS).
 
 ## Setup
 
