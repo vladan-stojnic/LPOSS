@@ -31,7 +31,7 @@ mim install "mmsegmentation==0.27.0"
 Install additional requirements:
 ```
 conda install -c pytorch -c nvidia faiss-gpu=1.8.0
-pip install kornia cupy-cuda11x ftfy omegaconf open_clip_torch==2.26.1 hydra-core wandb
+pip install kornia==0.7.4 cupy-cuda11x ftfy omegaconf open_clip_torch==2.26.1 hydra-core wandb
 ```
 
 ## Datasets
